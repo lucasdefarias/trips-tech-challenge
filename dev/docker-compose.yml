@@ -1,0 +1,14 @@
+services:
+  db:
+    environment:
+      MYSQL_DATABASE: trips-challenge
+      MYSQL_PASSWORD: local
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: local
+    image: mysql:8
+    platform: linux/amd64
+    ports:
+      - 3306:3306
+    volumes:
+      - './.local/data/db:/var/lib/mysql:delegated'
+version: '3'
