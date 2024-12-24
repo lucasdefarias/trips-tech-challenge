@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SearchTrips, SaveTrip, ListSavedTrips } from '../user/trips/commands';
+import { SearchTrips, SaveTrip, ListSavedTrips } from './commands';
 import { Trip } from './models/trip.interface';
 import { sortingFieldMap } from './models/trip-sorting-strategy.type';
 import { authFetch } from 'src/common/authFetch';

@@ -11,14 +11,14 @@ const generateMigrationIndex = (migrationFiles: string[]) =>
 ${migrationFiles
   .map(
     (file) =>
-      `import { migration${getMigrationTimestamp(file)} } from './${getMigrationTimestamp(
+      `import {   Migration${getMigrationTimestamp(file)} } from './${getMigrationTimestamp(
         file,
       )}-migration';`,
   )
   .join('\n')}
 
 export default [
-  ${migrationFiles.map((file) => `migration${getMigrationTimestamp(file)}`).join(',\n  ')}
+  ${migrationFiles.map((file) => `Migration${getMigrationTimestamp(file)}`).join(',\n  ')}
 ];
   `;
 
