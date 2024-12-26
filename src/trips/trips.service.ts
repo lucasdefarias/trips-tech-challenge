@@ -2,17 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { SearchTrips, SaveTrip, ListSavedTrips } from './commands';
 import { Trip } from './models/trip.interface';
 import { sortingFieldMap } from './models/trip-sorting-strategy.type';
-import { authFetch } from 'src/common/authFetch';
-
-const TRIPS_API_URL =
-  'https://z0qw1e7jpd.execute-api.eu-west-1.amazonaws.com/default/trips';
+import { searchTrips } from './repository/trips-api.repository';
+import {
+  listTrips,
+  insertTrip,
+  deleteTrip,
+} from './repository/mysql.repository';
 
 @Injectable()
 export class TripsService {
   async search({ origin, destination, sort_by }: SearchTrips): Promise<Trip[]> {
-    const unsorted: Trip[] = await authFetch(
-      `${TRIPS_API_URL}?origin=${origin}&destination=${destination}`,
-    ).then((res) => res.json());
+    const unsorted: Trip[] = await searchTrips({ origin, destination });
 
     if (sort_by) {
       return unsorted.sort(
@@ -22,33 +22,16 @@ export class TripsService {
     return unsorted;
   }
 
-  async listSaved(listSavedTripsCommand: ListSavedTrips): Promise<Trip[]> {
-    return []; // TODOXS
+  async listSaved({ sort_by }: ListSavedTrips): Promise<Trip[]> {
+    const order = sort_by ? { [sortingFieldMap[sort_by]]: 'ASC' } : null;
+    return listTrips(order);
   }
 
   async saveTrip(saveTripCommand: SaveTrip): Promise<Trip> {
-    console.log("Saving", saveTripCommand.newTrip);
-    return {
-      origin: 'a',
-      destination: 'b',
-      cost: 10,
-      duration: 5,
-      type: 'car',
-      display_name: 'Trip in car to Lagos',
-      id: '12easdas',
-    };
+    return insertTrip(saveTripCommand.newTrip);
   }
 
   async delete({ id }: { id: string }): Promise<Trip> {
-    // TODO
-    return {
-      origin: 'a',
-      destination: 'b',
-      cost: 10,
-      duration: 5,
-      type: 'car',
-      display_name: 'Trip in car to Lagos',
-      id,
-    };
+    return deleteTrip({ id });
   }
 }
