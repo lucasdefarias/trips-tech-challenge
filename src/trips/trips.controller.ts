@@ -32,8 +32,8 @@ export class TripsController {
   }
 
   @Get('user')
-  listSaved(): Promise<Trip[]> {
-    return this.tripsService.listSaved({});
+  listSaved(@Query('sort_by') sort_by: TripSortingStrategy): Promise<Trip[]> {
+    return this.tripsService.listSaved({ sort_by });
   }
 
   @Post('user')
