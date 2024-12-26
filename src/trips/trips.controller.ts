@@ -11,11 +11,14 @@ import { TripsService } from './trips.service';
 import { TripSortingStrategy } from './models/trip-sorting-strategy.type';
 import { Trip } from './models/trip.interface';
 
-@Controller('trips')
+@Controller({
+  path: 'trips',
+  version: '1',
+})
 export class TripsController {
   constructor(private readonly tripsService: TripsService) {}
 
-  @Get('search')
+  @Get()
   searchTrips(
     @Query('origin') origin: string,
     @Query('destination') destination: string,
@@ -28,17 +31,17 @@ export class TripsController {
     });
   }
 
-  @Get()
+  @Get('user')
   listSaved(): Promise<Trip[]> {
     return this.tripsService.listSaved({});
   }
 
-  @Post()
+  @Post('user')
   saveTrip(@Body() newTrip: Trip): Promise<Trip> {
     return this.tripsService.saveTrip({ newTrip });
   }
 
-  @Delete(':id')
+  @Delete('user/:id')
   delete(@Param('id') id: string): Promise<Trip> {
     return this.tripsService.delete({ id });
   }
