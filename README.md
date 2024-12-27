@@ -1,41 +1,60 @@
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This is a tech challenge using Nest.js alongside TypeORM.
 
-## Project setup
+## Project Setup
 
+### Prerequisites
+
+- Node (>= 18.8)
+- Docker
+
+### Installation
+
+To install dependencies, run:
 ```bash
-$ npm install
+npm install
 ```
 
-Add `API_KEY` to `.env` file
+Add `API_KEY` and `DATABASE_URL` to the `.env` file.
 
-## Compile and run the project
+## Compile and Run the Project
 
+Before running, ensure the database is up. You can use these commands:
 ```bash
-# development
-$ npm run start
+# Start the database
+npm run dev:db:start
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+# Stop the database
+npm run dev:db:stop
 ```
 
-## Run tests
-
+Ensure the migrations are up to date:
 ```bash
-# unit tests
-$ npm run test
+npm run migration:run
+```
 
-# e2e tests
-$ npm run test:e2e
+To start the project, use:
+```bash
+# Development mode
+npm run start
 
-# test coverage
-$ npm run test:cov
+# Watch mode
+npm run start:dev
+```
+
+## Run Tests
+
+To run unit tests, use:
+```bash
+npm run test
 ```
 
 ## API Documentation
 
-After running `npm run start:dev` you can access to the docs in your browser in the following URL: `http://localhost:3000/docs`
+After running `npm run start:dev`, you can access the API documentation in your browser at: `http://localhost:3000/docs`
+
+## Features Missing
+
+- [ ] Pagination
+- [ ] Better error handling
