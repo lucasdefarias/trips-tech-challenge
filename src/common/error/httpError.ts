@@ -5,9 +5,9 @@ export class HttpError extends Error {
   public message: ErrorMessage;
 
   public code: ErrorCode;
-  public context?: object;
+  public context?: any;
 
-  public constructor(code: ErrorCode, message: ErrorMessage, context?: object) {
+  public constructor(code: ErrorCode, message: ErrorMessage, context?: any) {
     super();
     this.code = code;
     this.message = message;

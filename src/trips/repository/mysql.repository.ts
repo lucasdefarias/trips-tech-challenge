@@ -1,6 +1,6 @@
-import { HttpError, ErrorMessage } from 'src/common/error';
-import { getPersistentDataSource } from 'src/persistence/app.datasource';
-import { Entity } from 'src/persistence/entities';
+import { HttpError, ErrorMessage } from '../../common/error';
+import { getPersistentDataSource } from '../../persistence/app.datasource';
+import { Entity } from '../../persistence/entities';
 import { UserTrip } from '../models/user-trip.entity';
 
 const getDataSourceOrFail = async () => {
@@ -10,15 +10,15 @@ const getDataSourceOrFail = async () => {
   return dataSource;
 };
 
-export const insertTrip = async (trip: UserTrip): Promise<UserTrip> => {
+export const insertTrip = async (trip: UserTrip): Promise<{ id: string }> => {
   const dataSource = await getDataSourceOrFail();
   const result = await dataSource.manager.transaction(async (entityManager) => {
     const userTripRepo = entityManager.getRepository(Entity.UserTrip);
-    const userTrip = userTripRepo.create(trip);
-    return userTrip;
+    const result = await userTripRepo.insert(trip);
+    return result.generatedMaps[0];
   });
 
-  return result;
+  return result as { id: string };
 };
 
 export const deleteTrip = async ({ id }: { id: string }): Promise<UserTrip> => {
@@ -27,7 +27,11 @@ export const deleteTrip = async ({ id }: { id: string }): Promise<UserTrip> => {
     const userTripRepo = entityManager.getRepository(Entity.UserTrip);
     const trip = await userTripRepo.findOne({ where: { id } });
     if (!trip) {
-      throw new HttpError(400, ErrorMessage.NO_RESOURCE, { id });
+      throw new HttpError(400, ErrorMessage.NO_RESOURCE, {
+        details: {
+          id,
+        },
+      });
     }
     await userTripRepo.delete({ id });
 
@@ -37,11 +41,11 @@ export const deleteTrip = async ({ id }: { id: string }): Promise<UserTrip> => {
   return result;
 };
 
-export const listTrips = async (order): Promise<UserTrip[]> => {
+export const listTrips = async (orderObject): Promise<UserTrip[]> => {
   const dataSource = await getDataSourceOrFail();
   const result = await dataSource.manager.transaction(async (entityManager) => {
     const userTripRepo = entityManager.getRepository(Entity.UserTrip);
-    const trips = userTripRepo.find(order ?? {});
+    const trips = userTripRepo.find(orderObject ? { order: orderObject } : {});
     return trips;
   });
 
